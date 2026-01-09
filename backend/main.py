@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -6,10 +7,24 @@ from collections import defaultdict, deque
 
 app = FastAPI()
 
+default_origins = [
+    "http://localhost:3000",  # Default React development port
+    "http://127.0.0.1:3000",
+]
+
+frontend_origin_env = os.getenv("FRONTEND_ORIGIN")
+
+if frontend_origin_env:
+    origins = default_origins + [frontend_origin_env]
+else:
+    origins = default_origins
+
+print(f"Configured CORS Origins: {origins}")
+
 # CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -74,7 +89,7 @@ def read_root():
 @app.post('/pipelines/parse')
 def parse_pipeline(pipeline: PipelineData):
     """
-    Parse the pipeline and return analysis results
+    Parse the pipeline data and return DAG check results
     """
     num_nodes = len(pipeline.nodes)
     num_edges = len(pipeline.edges)
