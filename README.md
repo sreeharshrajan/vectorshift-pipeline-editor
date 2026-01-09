@@ -4,7 +4,7 @@ This repository contains my submission for the **VectorShift Frontend Technical 
 
 The system enables users to compose pipelines using connected nodes, visualize data flow via directed edges, and submit the pipeline for structural validation. The frontend emphasizes composability and scalability of node definitions, while the backend performs lightweight pipeline analysis and DAG validation.
 
-## System Architecture4
+## System Architecture
 
 The application is composed of two clearly separated layers:
 
@@ -83,10 +83,6 @@ Upon submission:
 
 The response is surfaced to the user in a concise, human-readable alert, providing immediate feedback on pipeline correctness.
 
-## Screenshots / Demo Plan
-
-> Screenshots can be placed in a `/screenshots` directory and referenced here.
-
 ### Pipeline Authoring
 - Initial editor state with input and output nodes
 - Example of a multi-node pipeline
@@ -105,7 +101,9 @@ The response is surfaced to the user in a concise, human-readable alert, providi
   - Total edges
   - DAG validation result
 
-## Running the Application
+## Run the Application
+
+By following the below commands from the root folder, you can run this application.
 
 ### Frontend
 ```bash
@@ -119,8 +117,6 @@ npm start
 cd backend
 uvicorn main:app --reload
 ```
-
----
 
 ## Design Decisions
 
