@@ -4,9 +4,7 @@ This repository contains my submission for the **VectorShift Frontend Technical 
 
 The system enables users to compose pipelines using connected nodes, visualize data flow via directed edges, and submit the pipeline for structural validation. The frontend emphasizes composability and scalability of node definitions, while the backend performs lightweight pipeline analysis and DAG validation.
 
----
-
-## System Architecture
+## System Architecture4
 
 The application is composed of two clearly separated layers:
 
@@ -20,8 +18,6 @@ The application is composed of two clearly separated layers:
 
 This separation mirrors VectorShift’s model of **authoring pipelines on the client** and **validating/executing workflows on the server**.
 
----
-
 ## Technology Stack
 
 ### Frontend
@@ -32,8 +28,6 @@ This separation mirrors VectorShift’s model of **authoring pipelines on the cl
 ### Backend
 - Python
 - FastAPI
-
----
 
 ## Core Features
 
@@ -89,8 +83,6 @@ Upon submission:
 
 The response is surfaced to the user in a concise, human-readable alert, providing immediate feedback on pipeline correctness.
 
----
-
 ## Screenshots / Demo Plan
 
 > Screenshots can be placed in a `/screenshots` directory and referenced here.
@@ -112,8 +104,6 @@ The response is surfaced to the user in a concise, human-readable alert, providi
   - Total nodes
   - Total edges
   - DAG validation result
-
----
 
 ## Running the Application
 
@@ -139,8 +129,6 @@ uvicorn main:app --reload
 - Kept backend logic minimal and explicit for readability
 - Ensured frontend and backend responsibilities remain clearly separated
 
----
-
 ## Summary
 
 This implementation focuses on:
@@ -152,10 +140,6 @@ This implementation focuses on:
 
 The result is a maintainable foundation for a pipeline editor that can be extended to support more complex orchestration and execution use cases.
 
----
-
 ## Author
 
 Sreeharsh Rajan
-2026
----
