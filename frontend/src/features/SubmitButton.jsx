@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { useStore } from "../store/store";
+import { useStore } from "../store";
 import { shallow } from "zustand/shallow";
-import { HiPlay, HiOutlineRefresh } from "react-icons/hi";
+import { HiRocketLaunch, HiOutlineArrowPath } from "react-icons/hi2";
 import { Toast } from "../components/Toast.jsx";
 
 const selector = (state) => ({
@@ -9,13 +9,11 @@ const selector = (state) => ({
   edges: state.edges,
 });
 
-// Environment variable support with local fallback
 const BACKEND_URL =
   process.env.REACT_APP_BACKEND_URL || "http://127.0.0.1:8000";
 const API_ENDPOINT = `${BACKEND_URL}/pipelines/parse`;
 
 export const SubmitButton = () => {
-  const [isHovered, setIsHovered] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [toast, setToast] = useState(null);
 
@@ -26,13 +24,12 @@ export const SubmitButton = () => {
   };
 
   const handleSubmit = async () => {
-    // 1. Initial Validation
     if (nodes.length === 0) {
       showToast(
         <div>
-          <p className="font-bold">Canvas is Empty</p>
+          <p className="font-bold">Pipeline is Empty</p>
           <p className="text-xs opacity-90">
-            Add at least one node to analyze the pipeline.
+            Add at least one node to analyze.
           </p>
         </div>,
         "warning"
@@ -43,7 +40,6 @@ export const SubmitButton = () => {
     setIsLoading(true);
 
     try {
-      // 2. API Call
       const response = await fetch(API_ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -54,7 +50,6 @@ export const SubmitButton = () => {
 
       const result = await response.json();
 
-      // 3. Dynamic Success/Warning Toast
       showToast(
         <div className="w-full">
           <p className="font-bold mb-2">Analysis Complete</p>
@@ -88,14 +83,10 @@ export const SubmitButton = () => {
         result.is_dag ? "success" : "warning"
       );
     } catch (error) {
-      // 4. Detailed Error Toast
       showToast(
         <div>
           <p className="font-bold">Connection Failed</p>
           <p className="text-xs mb-2 opacity-80">{error.message}</p>
-          <div className="text-[10px] p-2 bg-red-500/10 rounded border border-red-500/20">
-            Target: <code className="bg-black/20 px-1">{BACKEND_URL}</code>
-          </div>
         </div>,
         "error"
       );
@@ -106,39 +97,37 @@ export const SubmitButton = () => {
 
   return (
     <>
-      <div className="fixed bottom-6 right-6 z-40">
-        <div className="relative group">
-          <button
-            onClick={handleSubmit}
-            disabled={isLoading}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-            className={`
-              flex items-center gap-2 px-5 py-2.5 rounded-lg font-bold text-sm
-              transition-all duration-300 shadow-lg active:scale-95 disabled:opacity-50
-              ${
-                isLoading
-                  ? "bg-slate-700 text-slate-300 cursor-wait"
-                  : "bg-blue-600 hover:bg-blue-500 text-white hover:shadow-blue-500/40 hover:-translate-y-0.5"
-              }
-            `}
-          >
-            {isLoading ? (
-              <HiOutlineRefresh className="w-4 h-4 animate-spin" />
-            ) : (
-              <HiPlay className="w-4 h-4" />
-            )}
-            <span>{isLoading ? "Running..." : "Run Pipeline"}</span>
-          </button>
+      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50">
+        <button
+          onClick={handleSubmit}
+          disabled={isLoading}
+          className={`
+            group relative flex items-center gap-2 px-8 py-3 
+            rounded-2xl font-bold text-sm uppercase tracking-widest
+            transition-all duration-300 active:scale-95 disabled:opacity-70
+            bg-indigo-600 text-white shadow-[0_10px_20px_-5px_rgba(79,70,229,0.4)]
+            hover:bg-indigo-500 hover:shadow-[0_15px_25px_-5px_rgba(79,70,229,0.5)]
+            hover:-translate-y-1
+            dark:bg-indigo-500 dark:hover:bg-indigo-400
+          `}
+        >
+          {isLoading ? (
+            <>
+              <HiOutlineArrowPath className="w-5 h-5 animate-spin" />
+              <span>Analyzing...</span>
+            </>
+          ) : (
+            <>
+              <HiRocketLaunch className="w-5 h-5 transition-transform group-hover:rotate-12 group-hover:-translate-y-px" />
+              <span>Submit Pipeline</span>
 
-          {/* Minimal Tooltip */}
-          {!isLoading && isHovered && (
-            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-2 py-1 bg-slate-800 text-white text-[10px] rounded shadow-xl whitespace-nowrap animate-in fade-in slide-in-from-bottom-1">
-              Analyze Current Graph
-              <div className="absolute top-full left-1/2 -translate-x-1/2 w-2 h-2 bg-slate-800 rotate-45 -mt-1" />
-            </div>
+              {/* Shimmer Effect Layer */}
+              <div className="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none">
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
+              </div>
+            </>
           )}
-        </div>
+        </button>
       </div>
 
       {toast && (
