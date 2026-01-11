@@ -102,27 +102,31 @@ export const SubmitButton = () => {
           onClick={handleSubmit}
           disabled={isLoading}
           className={`
-            group relative flex items-center gap-2 px-8 py-3 
-            rounded-2xl font-bold text-sm uppercase tracking-widest
-            transition-all duration-300 active:scale-95 disabled:opacity-70
-            bg-indigo-600 text-white shadow-[0_10px_20px_-5px_rgba(79,70,229,0.4)]
-            hover:bg-indigo-500 hover:shadow-[0_15px_25px_-5px_rgba(79,70,229,0.5)]
-            hover:-translate-y-1
-            dark:bg-indigo-500 dark:hover:bg-indigo-400
+           group relative flex items-center gap-2 
+      px-5 py-2.5 md:px-8 md:py-3 
+      rounded-xl md:rounded-2xl 
+      font-bold text-[11px] md:text-sm 
+      uppercase tracking-widest
+      
+      transition-all duration-300 active:scale-95 disabled:opacity-70
+      bg-indigo-600 text-white shadow-[0_10px_20px_-5px_rgba(79,70,229,0.4)]
+      hover:bg-indigo-500 hover:shadow-[0_15px_25px_-5px_rgba(79,70,229,0.5)]
+      md:hover:-translate-y-1
+      dark:bg-indigo-500 dark:hover:bg-indigo-400
           `}
         >
           {isLoading ? (
             <>
-              <HiOutlineArrowPath className="w-5 h-5 animate-spin" />
+              <HiOutlineArrowPath className="w-4 h-4 md:w-5 md:h-5 animate-spin" />
               <span>Analyzing...</span>
             </>
           ) : (
             <>
-              <HiRocketLaunch className="w-5 h-5 transition-transform group-hover:rotate-12 group-hover:-translate-y-px" />
-              <span>Submit Pipeline</span>
+              <HiRocketLaunch className="w-4 h-4 md:w-5 md:h-5 transition-transform group-hover:rotate-12 group-hover:-translate-y-px" />
+              <span className="whitespace-nowrap">Submit Pipeline</span>
 
               {/* Shimmer Effect Layer */}
-              <div className="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none">
+              <div className="absolute inset-0 rounded-xl md:rounded-2xl overflow-hidden pointer-events-none">
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
               </div>
             </>
