@@ -12,7 +12,7 @@ default_origins = [
     "http://127.0.0.1:3000",
 ]
 
-frontend_origin_env = os.getenv("FRONTEND_ORIGIN")
+frontend_origin_env = os.getenv("FRONTEND_ORIGIN_URL")
 
 if frontend_origin_env:
     origins = default_origins + [frontend_origin_env]
