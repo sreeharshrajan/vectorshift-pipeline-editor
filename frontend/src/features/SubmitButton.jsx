@@ -75,7 +75,7 @@ export const SubmitButton = () => {
             >
               <span className="opacity-70">Graph Structure</span>
               <span className="font-bold">
-                {result.is_dag ? "Valid DAG ✓" : "Cycles Detected ✗"}
+                {result.is_dag ? "Valid DAG ✓" : "Cycles Detected - Invalid DAG  ✗"}
               </span>
             </div>
           </div>
