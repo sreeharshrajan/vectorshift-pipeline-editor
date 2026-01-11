@@ -3,7 +3,7 @@ import ReactFlow, { Controls, Background, MiniMap } from "reactflow";
 import { useStore } from "../store";
 import { shallow } from "zustand/shallow";
 import { Header } from "../components/Header";
-import { InputNode } from "../nodes/inputNode";
+import InputNode from "../nodes/definitions/inputNode";
 import { LLMNode } from "../nodes/llmNode";
 import { OutputNode } from "../nodes/outputNode";
 import { TextNode } from "../nodes/textNode";
