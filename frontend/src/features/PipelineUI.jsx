@@ -31,6 +31,7 @@ const selector = (state) => ({
   onNodesChange: state.onNodesChange,
   onEdgesChange: state.onEdgesChange,
   onConnect: state.onConnect,
+  resetCanvas: state.resetCanvas,
   theme: state.theme,
 });
 
@@ -48,6 +49,7 @@ export const PipelineUI = () => {
     onEdgesChange,
     onConnect,
     theme,
+    resetCanvas,
   } = useStore(selector, shallow);
 
   const themeMode = theme === "dark" ? "dark" : "light";
@@ -97,7 +99,11 @@ export const PipelineUI = () => {
         themeMode === "dark" ? "bg-[#0f172a]" : "bg-white"
       }`}
     >
-      <Header nodeCount={nodes.length} edgeCount={edges.length} />
+      <Header
+        nodeCount={nodes.length}
+        edgeCount={edges.length}
+        onReset={resetCanvas}
+      />
 
       <div ref={reactFlowWrapper} className="flex-1 relative">
         {nodes.length === 0 && <WelcomeBox />}

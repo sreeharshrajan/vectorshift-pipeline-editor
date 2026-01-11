@@ -93,6 +93,12 @@ export const useStore = create(
             node.id === nodeId ? { ...node, data: { ...data } } : node
           ),
         })),
+
+      resetCanvas: () =>
+        set({
+          nodes: [],
+          edges: [],
+        }),
     }),
     {
       name: "pipeline-editor-store",
