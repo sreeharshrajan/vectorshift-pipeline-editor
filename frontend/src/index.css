@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  /* Light Mode */
+  --bg-node: #ffffff;
+  --bg-node-gradient: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  --border-node: #e2e8f0;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --accent-color: #7c3aed;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -54,4 +64,14 @@ code {
   --accent-math: #fde047;
   --accent-delay: #fb923c;
   --accent-collector: #94a3b8;
+}
+
+.dark {
+  /* Dark Mode */
+  --bg-node: #1a1f2e;
+  --bg-node-gradient: linear-gradient(135deg, #1a1f2e 0%, #111827 100%);
+  --border-node: #2e374a;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --accent-color: #a78bfa;
 }

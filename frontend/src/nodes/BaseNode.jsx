@@ -116,26 +116,60 @@ const BaseNode = memo(({ id, data = {}, nodeConfig }) => {
       </div>
 
       <div className="p-4 space-y-5">
-        {fields.map((field) => (
-          <div
-            key={field.key}
-            ref={(el) => (fieldRefs.current[field.key] = el)}
-            className="flex flex-col gap-2"
-          >
-            {field.label && (
-              <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
-                {field.label}
-              </label>
-            )}
-            <div className="rounded-md overflow-hidden text-sm bg-slate-50 border border-slate-200 dark:bg-[#2e374a] dark:border-transparent">
-              <div className="[&_input:not([type=checkbox])]:bg-transparent [&_input:not([type=checkbox])]:w-full [&_input:not([type=checkbox])]:p-2 [&_input:not([type=checkbox])]:outline-none [&_select]:bg-transparent [&_select]:w-full [&_select]:p-2 [&_select]:outline-none">
-                {renderField(field, values[field.key], (next) =>
-                  updateField(field.key, next)
-                )}
+        {fields.map((field) => {
+          const isCheckbox = field.inputType === "checkbox";
+
+          return (
+            <div
+              key={field.key}
+              ref={(el) => (fieldRefs.current[field.key] = el)}
+              className="flex flex-col gap-2"
+            >
+              {field.label && (
+                <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                  {field.label}
+                </label>
+              )}
+
+              <div
+                className={`
+            rounded-md text-sm transition-colors
+            ${
+              isCheckbox
+                ? "bg-transparent border-none"
+                : "bg-slate-50 border border-slate-200 dark:bg-[#2e374a] dark:border-transparent overflow-hidden"
+            }
+          `}
+              >
+                <div
+                  className={`
+              ${
+                !isCheckbox &&
+                `
+                [&_input]:bg-transparent 
+                [&_input]:w-full 
+                [&_input]:p-2 
+                [&_input]:outline-none 
+                [&_select]:bg-transparent 
+                [&_select]:w-full 
+                [&_select]:p-2 
+                [&_select]:outline-none
+                [&_textarea]:bg-transparent
+                [&_textarea]:w-full
+                [&_textarea]:p-2
+                [&_textarea]:outline-none
+              `
+              }
+            `}
+                >
+                  {renderField(field, values[field.key], (next) =>
+                    updateField(field.key, next)
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {rightHandles.map((handle) => (
