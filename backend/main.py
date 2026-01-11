@@ -1,5 +1,4 @@
-import os
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Dict, Any, Optional
@@ -7,30 +6,15 @@ from collections import defaultdict, deque
 
 app = FastAPI()
 
-default_origins = [
-    "http://localhost:3000",  # Default React development port
-    "http://127.0.0.1:3000",
-]
-
-frontend_origin_env = os.getenv("FRONTEND_ORIGIN_URL")
-
-if frontend_origin_env:
-    origins = default_origins + [frontend_origin_env]
-else:
-    origins = default_origins
-
-print(f"Configured CORS Origins: {origins}")
-
-# CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
+    allow_origins=["*"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# ---------- Models ----------
+# ---- Models ----
 
 class NodeData(BaseModel):
     id: str
@@ -49,13 +33,9 @@ class PipelineData(BaseModel):
     nodes: List[NodeData]
     edges: List[EdgeData]
 
-# ---------- Function ----------
+# ---- DAG Check ----
 
 def is_dag(nodes: List[NodeData], edges: List[EdgeData]) -> bool:
-    """
-    Detect if the the given values forms a Directed Acyclic Graph (DAG)
-    using Kahn's algorithm (topological sort with cycle detection)
-    """
     if not nodes:
         return True
 
@@ -66,13 +46,12 @@ def is_dag(nodes: List[NodeData], edges: List[EdgeData]) -> bool:
         adjacency[edge.source].append(edge.target)
         in_degree[edge.target] += 1
 
-    queue = deque([node_id for node_id, deg in in_degree.items() if deg == 0])
+    queue = deque([n for n, d in in_degree.items() if d == 0])
     visited = 0
 
     while queue:
         node = queue.popleft()
         visited += 1
-
         for neighbor in adjacency[node]:
             in_degree[neighbor] -= 1
             if in_degree[neighbor] == 0:
@@ -80,23 +59,20 @@ def is_dag(nodes: List[NodeData], edges: List[EdgeData]) -> bool:
 
     return visited == len(nodes)
 
-# ---------- Routes ----------
+# ---- Routes ----
 
-@app.get('/')
+@app.options("/{path:path}")
+def preflight_handler(path: str):
+    return Response(status_code=200)
+
+@app.get("/")
 def read_root():
-    return {'Ping': 'Pong'}
+    return {"Ping": "Pong"}
 
-@app.post('/pipelines/parse')
+@app.post("/pipelines/parse")
 def parse_pipeline(pipeline: PipelineData):
-    """
-    Parse the pipeline data and return DAG check results
-    """
-    num_nodes = len(pipeline.nodes)
-    num_edges = len(pipeline.edges)
-    is_valid_dag = is_dag(pipeline.nodes, pipeline.edges)
-    
     return {
-        'num_nodes': num_nodes,
-        'num_edges': num_edges,
-        'is_dag': is_valid_dag
+        "num_nodes": len(pipeline.nodes),
+        "num_edges": len(pipeline.edges),
+        "is_dag": is_dag(pipeline.nodes, pipeline.edges),
     }

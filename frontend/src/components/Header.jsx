@@ -2,7 +2,7 @@ import React from "react";
 // Changed FaProjectDiagram to FaDiagramProject for Font Awesome 6
 import { FaRegCircleDot, FaDiagramProject } from "react-icons/fa6";
 import { TfiLink } from "react-icons/tfi";
-import { HiOutlineLightningBolt, HiOutlineSave } from "react-icons/hi";
+import { HiOutlineRefresh, HiOutlineSave } from "react-icons/hi";
 
 export const Header = ({ nodeCount, edgeCount }) => {
     return (
@@ -62,6 +62,17 @@ export const Header = ({ nodeCount, edgeCount }) => {
                     </div>
                 </div>
 
+                {/* Action Group */}
+                <div className="flex items-center gap-2 ml-2">
+                    <button className="p-2 text-neutral-500 hover:text-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-500/10 rounded-lg transition-colors">
+                        <HiOutlineSave className="w-5 h-5" />
+                    </button>
+
+                    <button className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 active:scale-95 transition-all text-white text-xs font-bold rounded-lg shadow-md shadow-indigo-500/20">
+                        <HiOutlineRefresh className="w-4 h-4" />
+                        <span className="hidden sm:inline">Reset Canvas</span>
+                    </button>
+                </div>
             </div>
         </header>
     );

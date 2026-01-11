@@ -24,18 +24,22 @@ export const PipelineToolbar = () => {
   return (
     <aside
       className={`
-        fixed left-6 top-1/2 -translate-y-1/2 z-10
-        bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl
-        border border-neutral-200/50 dark:border-slate-700/50
-        rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.3)]
-        transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]
-        flex flex-col 
-        h-fit max-h-[70vh]
-        ${sidebarCollapsed ? "w-24" : "w-64"}
+      fixed z-20 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]
+    flex flex-col
+    top-20 left-1/2 -translate-x-1/2 translate-y-0
+    w-[90%] h-fit max-h-[120px] 
+    rounded-[2rem]
+      md:top-1/2 md:left-6 md:-translate-y-1/2 md:translate-x-0
+    md:h-fit md:max-h-[70vh]
+    md:rounded-[2.5rem]
+    ${sidebarCollapsed ? "md:w-24" : "md:w-64"}
+    bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl
+    border border-neutral-200/50 dark:border-slate-700/50
+    shadow-[0_20px_50px_rgba(0,0,0,0.3)]
       `}
     >
       {/* Header */}
-      <div className="pt-8 px-6 pb-2 flex items-center justify-between">
+      <div className="hidden md:flex pt-8 px-6 pb-2 items-center justify-between">
         {!sidebarCollapsed && (
           <h2 className="font-black text-[10px] uppercase tracking-[0.25em] text-indigo-500 dark:text-indigo-400 opacity-80">
             Nodes
@@ -56,21 +60,21 @@ export const PipelineToolbar = () => {
       </div>
 
       {/* Node Palette */}
-      <div className="flex-1 px-4 py-6 flex flex-col gap-4 overflow-y-auto overflow-x-hidden scrollbar-hide">
+      <div className="flex-1 px-4 py-4 md:py-6 flex flex-row md:flex-col gap-4 overflow-x-auto md:overflow-y-auto scrollbar-hide items-center">
         {Object.entries(nodeIcons).map(([type, icon]) => (
           <DraggableNode
             key={type}
             type={type}
             label={type.replace(/([A-Z])/g, " $1").trim()}
             icon={icon}
-            collapsed={sidebarCollapsed}
+            collapsed={sidebarCollapsed || window.innerWidth < 768}
           />
         ))}
       </div>
 
       {/* Footer */}
       <div
-        className={`p-4 pb-8 mt-auto flex items-center transition-all duration-300 ${
+        className={`hidden md:flex p-4 pb-8 mt-auto items-center transition-all duration-300 ${
           sidebarCollapsed ? "justify-center" : "justify-between px-6"
         }`}
       >
