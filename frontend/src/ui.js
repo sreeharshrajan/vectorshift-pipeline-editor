@@ -1,11 +1,8 @@
-// ui.js
-// Displays the drag-and-drop UI
-// --------------------------------------------------
-
 import { useState, useRef, useCallback } from "react";
 import ReactFlow, { Controls, Background, MiniMap } from "reactflow";
 import { useStore } from "./store";
 import { shallow } from "zustand/shallow";
+
 import { InputNode } from "./nodes/inputNode";
 import { LLMNode } from "./nodes/llmNode";
 import { OutputNode } from "./nodes/outputNode";
@@ -15,6 +12,7 @@ import "reactflow/dist/style.css";
 
 const gridSize = 20;
 const proOptions = { hideAttribution: true };
+
 const nodeTypes = {
   customInput: InputNode,
   llm: LLMNode,
@@ -30,11 +28,13 @@ const selector = (state) => ({
   onNodesChange: state.onNodesChange,
   onEdgesChange: state.onEdgesChange,
   onConnect: state.onConnect,
+  theme: state.theme,
 });
 
 export const PipelineUI = () => {
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
+
   const {
     nodes,
     edges,
@@ -43,44 +43,41 @@ export const PipelineUI = () => {
     onNodesChange,
     onEdgesChange,
     onConnect,
+    theme,
   } = useStore(selector, shallow);
 
-  const getInitNodeData = (nodeID, type) => {
-    let nodeData = { id: nodeID, nodeType: `${type}` };
-    return nodeData;
-  };
+  const themeMode = theme === "dark" ? "dark" : "light";
+
+  const getInitNodeData = (nodeID, type) => ({
+    id: nodeID,
+    nodeType: type,
+  });
 
   const onDrop = useCallback(
     (event) => {
       event.preventDefault();
-
       if (!reactFlowInstance || !reactFlowWrapper.current) return;
 
-      const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
-
-      const raw = event?.dataTransfer?.getData("application/reactflow");
+      const bounds = reactFlowWrapper.current.getBoundingClientRect();
+      const raw = event.dataTransfer.getData("application/reactflow");
       if (!raw) return;
 
-      const appData = JSON.parse(raw);
-      const type = appData?.nodeType;
-
-      if (!type) return;
+      const { nodeType } = JSON.parse(raw);
+      if (!nodeType) return;
 
       const position = reactFlowInstance.project({
-        x: event.clientX - reactFlowBounds.left,
-        y: event.clientY - reactFlowBounds.top,
+        x: event.clientX - bounds.left,
+        y: event.clientY - bounds.top,
       });
 
-      const nodeID = getNodeID(type);
+      const nodeID = getNodeID(nodeType);
 
-      const newNode = {
+      addNode({
         id: nodeID,
-        type,
+        type: nodeType,
         position,
-        data: getInitNodeData(nodeID, type),
-      };
-
-      addNode(newNode);
+        data: getInitNodeData(nodeID, nodeType),
+      });
     },
     [reactFlowInstance, addNode, getNodeID]
   );
@@ -91,8 +88,12 @@ export const PipelineUI = () => {
   }, []);
 
   return (
-    <>
-      <div ref={reactFlowWrapper} style={{ width: "100wv", height: "70vh" }}>
+    <div className="flex flex-col flex-1 bg-bg" data-theme={themeMode}>
+      <header className="h-14 px-4 flex items-center border-b border-base-300">
+        <h1 className="text-lg font-semibold dark:text-white">VectorShift Pipeline Editor</h1>
+      </header>
+
+      <div ref={reactFlowWrapper} className="flex-1">
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -107,11 +108,11 @@ export const PipelineUI = () => {
           snapGrid={[gridSize, gridSize]}
           connectionLineType="smoothstep"
         >
-          <Background color="#aaa" gap={gridSize} />
+          <Background gap={20} />
           <Controls />
           <MiniMap />
         </ReactFlow>
       </div>
-    </>
+    </div>
   );
 };
