@@ -9,6 +9,7 @@ import { OutputNode } from "./nodes/outputNode";
 import { TextNode } from "./nodes/textNode";
 
 import "reactflow/dist/style.css";
+import { WelcomeBox } from "./components/WelcomeBox";
 
 const gridSize = 20;
 const proOptions = { hideAttribution: true };
@@ -90,10 +91,14 @@ export const PipelineUI = () => {
   return (
     <div className="flex flex-col flex-1 bg-bg" data-theme={themeMode}>
       <header className="h-14 px-4 flex items-center border-b border-base-300">
-        <h1 className="text-lg font-semibold dark:text-white">VectorShift Pipeline Editor</h1>
+        <h1 className="text-lg font-semibold dark:text-white">
+          VectorShift Pipeline Editor
+        </h1>
       </header>
 
       <div ref={reactFlowWrapper} className="flex-1">
+        {nodes.length === 0 && <WelcomeBox />}
+
         <ReactFlow
           nodes={nodes}
           edges={edges}
