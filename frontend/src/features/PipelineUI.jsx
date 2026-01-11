@@ -35,6 +35,7 @@ const selector = (state) => ({
 export const PipelineUI = () => {
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
+  const [isInteractive, setIsInteractive] = useState(true);
 
   const {
     nodes,
@@ -113,17 +114,36 @@ export const PipelineUI = () => {
           snapGrid={[gridSize, gridSize]}
           colorMode={themeMode}
           connectionLineType="smoothstep"
+          zoomOnScroll={isInteractive}
+          panOnScroll={isInteractive}
+          panOnDrag={isInteractive}
+          fitView
+          fitViewOptions={{
+            padding: 0.2,
+            minZoom: 0.6,
+            maxZoom: 0.8,
+          }}
+          className="rf-edge-hover"
         >
           <Background
             color={themeMode === "dark" ? "#334155" : "#cbd5e1"}
             variant="dots"
           />
-          <Controls className="dark:bg-slate-800 dark:border-slate-700 shadow-xl" />
+          <Controls
+            className="flex flex-row dark:bg-slate-800 dark:border-slate-700 shadow-xl"
+            position="top-right"
+            onInteractiveChange={setIsInteractive}
+            showInteractive={true}
+            aria-label="React Flow Controls"
+          />
           <MiniMap
             className="dark:bg-slate-900 border overflow-hidden dark:border-slate-700 rounded-lg"
             maskColor={
               themeMode === "dark" ? "rgba(0,0,0,0.5)" : "rgba(255,255,255,0.5)"
             }
+            zoomable
+            pannable
+            nodeStrokeWidth={3}
           />
         </ReactFlow>
       </div>
