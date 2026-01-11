@@ -3,10 +3,12 @@ import ReactFlow, { Controls, Background, MiniMap } from "reactflow";
 import { useStore } from "../store";
 import { shallow } from "zustand/shallow";
 import { Header } from "../components/Header";
-import InputNode from "../nodes/definitions/inputNode";
-import { LLMNode } from "../nodes/llmNode";
-import { OutputNode } from "../nodes/outputNode";
-import { TextNode } from "../nodes/textNode";
+
+// Nodes
+import InputNode from "../nodes/definitions/InputNode";
+import LLMNode from "../nodes/definitions/LLMNode";
+import OutputNode from "../nodes/definitions/OutputNode";
+import TextNode from "../nodes/definitions/TextNode";
 
 import "reactflow/dist/style.css";
 import { WelcomeBox } from "../components/WelcomeBox";

@@ -71,6 +71,28 @@ export const useStore = create(
             state.edges
           ),
         })),
+
+      updateNodeData: (nodeId, key, value) =>
+        set((state) => ({
+          nodes: state.nodes.map((node) =>
+            node.id === nodeId
+              ? {
+                  ...node,
+                  data: {
+                    ...node.data,
+                    [key]: value,
+                  },
+                }
+              : node
+          ),
+        })),
+
+      setNodeData: (nodeId, data) =>
+        set((state) => ({
+          nodes: state.nodes.map((node) =>
+            node.id === nodeId ? { ...node, data: { ...data } } : node
+          ),
+        })),
     }),
     {
       name: "pipeline-editor-store",

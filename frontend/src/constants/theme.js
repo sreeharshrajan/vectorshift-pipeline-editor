@@ -18,13 +18,13 @@ export const COLORS = {
 };
 
 export const NODE_ACCENTS = {
-    INPUT: "var(--accent-input)",
-    OUTPUT: "var(--accent-output)",
-    LLM: "var(--accent-llm)",
-    TEXT: "var(--accent-text)",
-    HTTP: "var(--accent-http)",
-    DECISION: "var(--accent-decision)",
-    MATH: "var(--accent-math)",
-    DELAY: "var(--accent-delay)",
-    COLLECTOR: "var(--accent-collector)",
+    INPUT: COLORS.BLUE,
+    OUTPUT: COLORS.RED,
+    LLM: COLORS.PURPLE,
+    TEXT: COLORS.GREEN,
+    HTTP: COLORS.CYAN,
+    DECISION: COLORS.PINK,
+    MATH: COLORS.YELLOW,
+    DELAY: COLORS.ORANGE,
+    COLLECTOR: COLORS.SLATE,
 };
