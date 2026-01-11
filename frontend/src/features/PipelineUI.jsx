@@ -3,6 +3,7 @@ import ReactFlow, { Controls, Background, MiniMap } from "reactflow";
 import { useStore } from "../store";
 import { shallow } from "zustand/shallow";
 import { Header } from "../components/Header";
+import { edgeTypes } from "../components/CustomEdge";
 
 // Nodes
 import InputNode from "../nodes/definitions/InputNode";
@@ -111,6 +112,7 @@ export const PipelineUI = () => {
         <ReactFlow
           nodes={nodes}
           edges={edges}
+          edgeTypes={edgeTypes}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}

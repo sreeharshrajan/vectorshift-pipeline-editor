@@ -26,7 +26,7 @@ function App() {
         {/* Main UI */}
         <PipelineUI />
 
-          <SubmitButton />
+        <SubmitButton />
       </div>
     </div>
   );
