@@ -6,9 +6,9 @@ import {
   HiArrowRightOnRectangle,
   HiDocumentText,
 } from "react-icons/hi2";
-import { DraggableNode } from "./draggableNode";
-import { ThemeToggle } from "./components/ThemeToggle";
-import { useStore } from "./store";
+import { DraggableNode } from "../draggableNode";
+import { ThemeToggle } from "../components/ThemeToggle";
+import { useStore } from "../store";
 
 const nodeIcons = {
   customInput: <HiSquare3Stack3D className="w-5 h-5" />,
@@ -66,16 +66,17 @@ export const PipelineToolbar = () => {
 
       {/* Footer */}
       <div
-        className={`p-6 mt-auto flex items-center ${
-          sidebarCollapsed ? "justify-center" : "justify-between"
-        }`}
+        className={`
+    p-4 mt-auto flex items-center transition-all duration-300
+    ${sidebarCollapsed ? "justify-center" : "justify-between px-6"}
+  `}
       >
         {!sidebarCollapsed && (
-          <span className="text-[10px] font-bold uppercase opacity-40">
+          <span className="text-[10px] font-bold uppercase opacity-40 tracking-wider text-neutral-600 dark:text-neutral-400">
             Mode
           </span>
         )}
-        <ThemeToggle />
+        <ThemeToggle collapsed={sidebarCollapsed} />
       </div>
     </aside>
   );

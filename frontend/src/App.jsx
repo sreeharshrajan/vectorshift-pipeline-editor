@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { useStore } from "./store";
-import { PipelineToolbar } from "./toolbar";
-import { PipelineUI } from "./ui";
-import { SubmitButton } from "./submit";
+import { PipelineToolbar } from "./features/PipelineToolbar";
+import { PipelineUI } from "./features/PipelineUI";
+import { SubmitButton } from "./features/SubmitButton";
 
 function App() {
   const theme = useStore((s) => s.theme);
@@ -26,9 +26,7 @@ function App() {
         {/* Main UI */}
         <PipelineUI />
 
-        <footer className="h-14 border-t border-neutral-200 dark:border-neutral-700 flex items-center justify-center bg-neutral-100 dark:bg-neutral-800">
           <SubmitButton />
-        </footer>
       </div>
     </div>
   );
