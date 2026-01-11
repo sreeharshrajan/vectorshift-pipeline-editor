@@ -6,7 +6,7 @@ import {
   HiArrowRightOnRectangle,
   HiDocumentText,
 } from "react-icons/hi2";
-import { DraggableNode } from "../draggableNode";
+import { DraggableNode } from "../components/DraggableNode";
 import { ThemeToggle } from "../components/ThemeToggle";
 import { useStore } from "../store";
 
@@ -24,13 +24,13 @@ export const PipelineToolbar = () => {
   return (
     <aside
       className={`
-        fixed left-6 top-1/2 -translate-y-1/2 z-50
+        fixed left-6 top-1/2 -translate-y-1/2 z-10
         bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl
         border border-neutral-200/50 dark:border-slate-700/50
         rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.3)]
         transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]
-        flex flex-col overflow-hidden
-        h-fit max-h-[80vh]
+        flex flex-col 
+        h-fit max-h-[70vh]
         ${sidebarCollapsed ? "w-24" : "w-64"}
       `}
     >
@@ -70,10 +70,9 @@ export const PipelineToolbar = () => {
 
       {/* Footer */}
       <div
-        className={`
-    p-4 mt-auto flex items-center transition-all duration-300
-    ${sidebarCollapsed ? "justify-center" : "justify-between px-6"}
-        `}
+        className={`p-4 pb-8 mt-auto flex items-center transition-all duration-300 ${
+          sidebarCollapsed ? "justify-center" : "justify-between px-6"
+        }`}
       >
         {!sidebarCollapsed && (
           <span className="text-[10px] font-bold uppercase opacity-30 tracking-widest text-neutral-600 dark:text-slate-400">

@@ -12,11 +12,9 @@ export const ThemeToggle = ({ collapsed }) => {
         w-10 h-10 flex items-center justify-center 
         transition-all duration-500
         
-        /* Glassmorphism Styling */
         bg-white/40 dark:bg-slate-800/40 backdrop-blur-md
         border border-neutral-200/50 dark:border-slate-700/50
         
-        /* Shape and Interaction */
         ${collapsed ? "rounded-2xl" : "rounded-xl"}
         text-slate-500 dark:text-slate-400 
         hover:bg-indigo-50/80 dark:hover:bg-indigo-500/20
