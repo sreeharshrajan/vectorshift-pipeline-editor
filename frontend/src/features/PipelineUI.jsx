@@ -2,7 +2,7 @@ import { useState, useRef, useCallback } from "react";
 import ReactFlow, { Controls, Background, MiniMap } from "reactflow";
 import { useStore } from "../store";
 import { shallow } from "zustand/shallow";
-
+import { Header } from "../components/Header";
 import { InputNode } from "../nodes/inputNode";
 import { LLMNode } from "../nodes/llmNode";
 import { OutputNode } from "../nodes/outputNode";
@@ -15,121 +15,118 @@ const gridSize = 20;
 const proOptions = { hideAttribution: true };
 
 const nodeTypes = {
-    customInput: InputNode,
-    llm: LLMNode,
-    customOutput: OutputNode,
-    text: TextNode,
+  customInput: InputNode,
+  llm: LLMNode,
+  customOutput: OutputNode,
+  text: TextNode,
 };
 
 const selector = (state) => ({
-    nodes: state.nodes,
-    edges: state.edges,
-    getNodeID: state.getNodeID,
-    addNode: state.addNode,
-    onNodesChange: state.onNodesChange,
-    onEdgesChange: state.onEdgesChange,
-    onConnect: state.onConnect,
-    theme: state.theme,
+  nodes: state.nodes,
+  edges: state.edges,
+  getNodeID: state.getNodeID,
+  addNode: state.addNode,
+  onNodesChange: state.onNodesChange,
+  onEdgesChange: state.onEdgesChange,
+  onConnect: state.onConnect,
+  theme: state.theme,
 });
 
 export const PipelineUI = () => {
-    const reactFlowWrapper = useRef(null);
-    const [reactFlowInstance, setReactFlowInstance] = useState(null);
+  const reactFlowWrapper = useRef(null);
+  const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
-    const {
-        nodes,
-        edges,
-        getNodeID,
-        addNode,
-        onNodesChange,
-        onEdgesChange,
-        onConnect,
-        theme,
-    } = useStore(selector, shallow);
+  const {
+    nodes,
+    edges,
+    getNodeID,
+    addNode,
+    onNodesChange,
+    onEdgesChange,
+    onConnect,
+    theme,
+  } = useStore(selector, shallow);
 
-    const themeMode = theme === "dark" ? "dark" : "light";
+  const themeMode = theme === "dark" ? "dark" : "light";
 
-    const getInitNodeData = (nodeID, type) => ({
+  const getInitNodeData = (nodeID, type) => ({
+    id: nodeID,
+    nodeType: type,
+  });
+
+  const onDrop = useCallback(
+    (event) => {
+      event.preventDefault();
+      if (!reactFlowInstance || !reactFlowWrapper.current) return;
+
+      const bounds = reactFlowWrapper.current.getBoundingClientRect();
+      const raw = event.dataTransfer.getData("application/reactflow");
+      if (!raw) return;
+
+      const { nodeType } = JSON.parse(raw);
+      if (!nodeType) return;
+
+      const position = reactFlowInstance.project({
+        x: event.clientX - bounds.left,
+        y: event.clientY - bounds.top,
+      });
+
+      const nodeID = getNodeID(nodeType);
+
+      addNode({
         id: nodeID,
-        nodeType: type,
-    });
+        type: nodeType,
+        position,
+        data: getInitNodeData(nodeID, nodeType),
+      });
+    },
+    [reactFlowInstance, addNode, getNodeID]
+  );
 
-    const onDrop = useCallback(
-        (event) => {
-            event.preventDefault();
-            if (!reactFlowInstance || !reactFlowWrapper.current) return;
+  const onDragOver = useCallback((event) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "move";
+  }, []);
 
-            const bounds = reactFlowWrapper.current.getBoundingClientRect();
-            const raw = event.dataTransfer.getData("application/reactflow");
-            if (!raw) return;
+  return (
+    <div
+      className={`flex flex-col h-screen overflow-hidden ${
+        themeMode === "dark" ? "bg-[#0f172a]" : "bg-white"
+      }`}
+    >
+      <Header nodeCount={nodes.length} edgeCount={edges.length} />
 
-            const { nodeType } = JSON.parse(raw);
-            if (!nodeType) return;
+      <div ref={reactFlowWrapper} className="flex-1 relative">
+        {nodes.length === 0 && <WelcomeBox />}
 
-            const position = reactFlowInstance.project({
-                x: event.clientX - bounds.left,
-                y: event.clientY - bounds.top,
-            });
-
-            const nodeID = getNodeID(nodeType);
-
-            addNode({
-                id: nodeID,
-                type: nodeType,
-                position,
-                data: getInitNodeData(nodeID, nodeType),
-            });
-        },
-        [reactFlowInstance, addNode, getNodeID]
-    );
-
-    const onDragOver = useCallback((event) => {
-        event.preventDefault();
-        event.dataTransfer.dropEffect = "move";
-    }, []);
-
-    return (
-        <div
-            className={`flex flex-col h-screen overflow-hidden ${themeMode === "dark" ? "bg-[#0f172a]" : "bg-white"
-                }`}
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+          onDrop={onDrop}
+          onDragOver={onDragOver}
+          onInit={setReactFlowInstance}
+          nodeTypes={nodeTypes}
+          proOptions={proOptions}
+          snapGrid={[gridSize, gridSize]}
+          colorMode={themeMode}
+          connectionLineType="smoothstep"
         >
-            <header className="h-16 px-8 flex items-center border-b border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-slate-900/50 backdrop-blur-md z-10">
-                <h1 className="text-xl font-bold tracking-tight text-neutral-800 dark:text-white">
-                    VectorShift <span className="text-indigo-500">Pipeline Editor</span>
-                </h1>
-            </header>
-
-            <div ref={reactFlowWrapper} className="flex-1 relative">
-                {nodes.length === 0 && <WelcomeBox />}
-
-                <ReactFlow
-                    nodes={nodes}
-                    edges={edges}
-                    onNodesChange={onNodesChange}
-                    onEdgesChange={onEdgesChange}
-                    onConnect={onConnect}
-                    onDrop={onDrop}
-                    onDragOver={onDragOver}
-                    onInit={setReactFlowInstance}
-                    nodeTypes={nodeTypes}
-                    proOptions={proOptions}
-                    snapGrid={[gridSize, gridSize]}
-                    colorMode={themeMode}
-                    connectionLineType="smoothstep"
-                >
-                    <Background
-                        color={themeMode === "dark" ? "#334155" : "#cbd5e1"}
-                        variant="dots"
-                    />
-                    <Controls className="dark:bg-slate-800 dark:border-slate-700 shadow-xl" />
-                    <MiniMap
-                        className="dark:bg-slate-900 border dark:border-slate-700 rounded-lg"
-                        maskColor={
-                            themeMode === "dark" ? "rgba(0,0,0,0.5)" : "rgba(255,255,255,0.5)"
-                        }
-                    />
-                </ReactFlow>
-            </div>
-        </div>
-    );
+          <Background
+            color={themeMode === "dark" ? "#334155" : "#cbd5e1"}
+            variant="dots"
+          />
+          <Controls className="dark:bg-slate-800 dark:border-slate-700 shadow-xl" />
+          <MiniMap
+            className="dark:bg-slate-900 border overflow-hidden dark:border-slate-700 rounded-lg"
+            maskColor={
+              themeMode === "dark" ? "rgba(0,0,0,0.5)" : "rgba(255,255,255,0.5)"
+            }
+          />
+        </ReactFlow>
+      </div>
+    </div>
+  );
 };
